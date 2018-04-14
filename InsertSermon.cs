@@ -21,20 +21,20 @@ namespace Blackbaud.Church.PreachingCollective
         [FunctionName("InsertSermon")]
         public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequest req, TraceWriter log)
         {
-            var searchCredentials = new SearchCredentials("1159A4B94EF6E53D4F10A8C7F1FDD9DD");
-            var serviceClient = new SearchServiceClient("preachingcollective", searchCredentials);
+            var searchCredentials = new SearchCredentials("0FD59A5E379EDBF58D9E283D47DB9683");
+            var serviceClient = new SearchServiceClient("preaching-collective", searchCredentials);
 
             var indexClient = serviceClient.Indexes.GetClient(indexName);
-            
 
-            if(!serviceClient.Indexes.Exists(indexName))
+
+            if (!serviceClient.Indexes.Exists(indexName))
             {
                 var definition = new Index()
                 {
                     Name = indexName,
                     Fields = FieldBuilder.BuildForType<Sermon>()
                 };
-                
+
                 serviceClient.Indexes.Create(definition);
             }
 
