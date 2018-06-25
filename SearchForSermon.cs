@@ -9,16 +9,19 @@ using Newtonsoft.Json;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using Blackbaud.Church.PreachingCollective.Models;
+using System;
 
 namespace Blackbaud.Church.PreachingCollective
 {
     public static class SearchForSermon
     {
         [FunctionName("SearchForSermon")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequest req, TraceWriter log)
+        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, TraceWriter log)
         {
-            var searchCredentials = new SearchCredentials("0FD59A5E379EDBF58D9E283D47DB9683");
-            var serviceClient = new SearchServiceClient("preaching-collective", searchCredentials);
+            var searchAccessKey = System.Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
+            var searchService = System.Environment.GetEnvironmentVariable("SearchService", EnvironmentVariableTarget.Process);
+            var searchCredentials = new SearchCredentials(searchAccessKey);
+            var serviceClient = new SearchServiceClient(searchService, searchCredentials);
 
             SearchParameters parameters;
 

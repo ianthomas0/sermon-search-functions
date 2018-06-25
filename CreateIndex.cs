@@ -14,11 +14,11 @@ using System;
 
 namespace Blackbaud.Church.PreachingCollective
 {
-    public static class InsertSermon
+    public static class CreateIndex
     {
         private static string indexName = Indexes.SermonIndex;
 
-        [FunctionName("InsertSermon")]
+        [FunctionName("CreateIndex")]
         public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, TraceWriter log)
         {
             var searchAccessKey = System.Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
@@ -28,19 +28,16 @@ namespace Blackbaud.Church.PreachingCollective
 
             var indexClient = serviceClient.Indexes.GetClient(indexName);
 
-            string requestBody = new StreamReader(req.Body).ReadToEnd();
-            Sermon data = JsonConvert.DeserializeObject<Sermon>(requestBody);
-            data.Id = Guid.NewGuid().ToString();
-
-            var sermons = new List<Sermon>()
+            if (!serviceClient.Indexes.Exists(indexName))
             {
-                data
-            };
+                var definition = new Index()
+                {
+                    Name = indexName,
+                    Fields = FieldBuilder.BuildForType<Sermon>()
+                };
 
-            var batch = IndexBatch.Upload(sermons);
-
-            indexClient.Documents.Index(batch);
-
+                serviceClient.Indexes.Create(definition);
+            }
             return new OkResult();
         }
     }

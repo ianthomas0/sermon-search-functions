@@ -24,7 +24,8 @@ namespace Blackbaud.Church.PreachingCollective.Models
         [IsSearchable, IsFilterable, IsSortable]
         public string Source { get; set; }
 
-        [IsSearchable, IsFilterable, IsSortable]
         public string Scripture { get; set; }
+        [IsSearchable, IsFilterable, IsSortable]
+        public string Date { get; set; }
     }
 }
