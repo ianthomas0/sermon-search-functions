@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.13" />
     <PackageReference Include="Microsoft.Azure.Search" Version="5.0.0" />
+    <PackageReference Include="Automapper" Version="7.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

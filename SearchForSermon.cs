@@ -10,6 +10,7 @@ using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using Blackbaud.Church.PreachingCollective.Models;
 using System;
+using System.Linq;
 
 namespace Blackbaud.Church.PreachingCollective
 {
@@ -37,7 +38,9 @@ namespace Blackbaud.Church.PreachingCollective
 
             results = indexClient.Documents.Search<Sermon>(req.Query["book"]);
 
-            return new OkObjectResult(results.Results);
+            var dedup = results.Results.GroupBy(x => x.Document.Title).Select(x => x.First()).Select(x => x.Document);
+
+            return new OkObjectResult(dedup);
         }
     }
 }

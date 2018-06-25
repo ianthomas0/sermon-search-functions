@@ -30,6 +30,14 @@ namespace Blackbaud.Church.PreachingCollective
 
             string requestBody = new StreamReader(req.Body).ReadToEnd();
             Sermon data = JsonConvert.DeserializeObject<Sermon>(requestBody);
+            /*data.Id = data.Title
+                .Replace(" ", String.Empty)
+                .Replace(",", String.Empty)
+                .Replace("’", String.Empty)
+                .Replace("‘", String.Empty)
+                .Replace("'", String.Empty)
+                .Replace("?", String.Empty)
+                .Replace("!", String.Empty);*/
 
             var sermons = new List<Sermon>()
             {
