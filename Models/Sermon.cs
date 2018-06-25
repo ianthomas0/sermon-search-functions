@@ -1,12 +1,12 @@
+using System;
 using Microsoft.Azure.Search;
 
 namespace Blackbaud.Church.PreachingCollective.Models
 {
     public class Sermon
     {
-        [System.ComponentModel.DataAnnotations.Key]
-        public string Id { get; set; }
         [IsSearchable, IsFilterable, IsSortable]
+        [System.ComponentModel.DataAnnotations.Key]
         public string Title { get; set; }
         [IsSearchable, IsFilterable, IsSortable]
         public string Author { get; set; }
@@ -26,6 +26,6 @@ namespace Blackbaud.Church.PreachingCollective.Models
 
         public string Scripture { get; set; }
         [IsSearchable, IsFilterable, IsSortable]
-        public string Date { get; set; }
+        public DateTimeOffset Date { get; set; }
     }
 }

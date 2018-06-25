@@ -30,7 +30,6 @@ namespace Blackbaud.Church.PreachingCollective
 
             string requestBody = new StreamReader(req.Body).ReadToEnd();
             Sermon data = JsonConvert.DeserializeObject<Sermon>(requestBody);
-            data.Id = Guid.NewGuid().ToString();
 
             var sermons = new List<Sermon>()
             {
