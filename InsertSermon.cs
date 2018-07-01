@@ -29,20 +29,7 @@ namespace Blackbaud.Church.PreachingCollective
             var indexClient = serviceClient.Indexes.GetClient(indexName);
 
             string requestBody = new StreamReader(req.Body).ReadToEnd();
-            Sermon data = JsonConvert.DeserializeObject<Sermon>(requestBody);
-            /*data.Id = data.Title
-                .Replace(" ", String.Empty)
-                .Replace(",", String.Empty)
-                .Replace("’", String.Empty)
-                .Replace("‘", String.Empty)
-                .Replace("'", String.Empty)
-                .Replace("?", String.Empty)
-                .Replace("!", String.Empty);*/
-
-            var sermons = new List<Sermon>()
-            {
-                data
-            };
+            var sermons = JsonConvert.DeserializeObject<IEnumerable<Sermon>>(requestBody);
 
             var batch = IndexBatch.Upload(sermons);
 
