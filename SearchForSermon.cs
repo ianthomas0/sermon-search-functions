@@ -36,7 +36,7 @@ namespace Blackbaud.Church.PreachingCollective
 
             var indexClient = serviceClient.Indexes.GetClient(Indexes.SermonIndex);
 
-            results = indexClient.Documents.Search<Sermon>(req.Query["book"]);
+            results = indexClient.Documents.Search<Sermon>(req.Query["book"], parameters);
 
             var dedup = results.Results.GroupBy(x => x.Document.Title).Select(x => x.First()).Select(x => x.Document);
 
