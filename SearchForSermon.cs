@@ -1,4 +1,3 @@
-
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -11,6 +10,7 @@ using Microsoft.Azure.Search.Models;
 using Blackbaud.Church.PreachingCollective.Models;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Blackbaud.Church.PreachingCollective
 {
@@ -27,12 +27,19 @@ namespace Blackbaud.Church.PreachingCollective
             SearchParameters parameters;
 
             DocumentSearchResult<Sermon> results;
+            var pageSize = 100;
 
             parameters = new SearchParameters()
             {
                 SearchFields = new[] { "Book" },
-                Top = 10
+                Top = pageSize,
+                OrderBy = new List<string>() { "Chapter asc", "VerseStart asc" }
             };
+
+            if (!string.IsNullOrEmpty(req.Query["page"]))
+            {
+                parameters.Skip = (int.Parse(req.Query["page"]) - 1) * pageSize;
+            }
 
             var indexClient = serviceClient.Indexes.GetClient(Indexes.SermonIndex);
 
