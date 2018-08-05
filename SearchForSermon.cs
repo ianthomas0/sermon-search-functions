@@ -28,10 +28,21 @@ namespace Blackbaud.Church.PreachingCollective
 
             DocumentSearchResult<Sermon> results;
             var pageSize = 100;
+            string filter = "";
+            var book = req.Query["book"];
+            var chapter = req.Query["chapter"];
+            if (!String.IsNullOrWhiteSpace(chapter))
+            {
+                filter = $"Book eq '{book}' and Chapter eq '{chapter}'";
+            }
+            else
+            {
+                filter = $"Book eq '{book}'";
+            }
 
             parameters = new SearchParameters()
             {
-                SearchFields = new[] { "Book" },
+                Filter = filter,
                 Top = pageSize,
                 OrderBy = new List<string>() { "Chapter asc", "VerseStart asc" }
             };
