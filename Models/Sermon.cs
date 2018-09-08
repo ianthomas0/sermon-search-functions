@@ -16,7 +16,7 @@ namespace Blackbaud.Church.PreachingCollective.Models
         [IsSearchable, IsFilterable, IsSortable]
         public string Text { get; set; }
         [IsSearchable, IsFilterable, IsSortable]
-        public string Chapter { get; set; }
+        public int? Chapter { get; set; }
         [IsSearchable, IsFilterable, IsSortable]
         public int? VerseStart { get; set; }
         [IsSearchable, IsFilterable, IsSortable]

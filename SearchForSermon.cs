@@ -27,7 +27,7 @@ namespace Blackbaud.Church.PreachingCollective
             SearchParameters parameters;
 
             DocumentSearchResult<Sermon> results;
-            var pageSize = 100;
+            var pageSize = 1000;
             string filter = "";
             var book = req.Query["book"];
             var chapter = req.Query["chapter"];

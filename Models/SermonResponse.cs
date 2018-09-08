@@ -9,9 +9,9 @@ namespace preaching_collective_functions.Models
         public string Author { get; set; }
         public string Book { get; set; }
         public string Text { get; set; }
-        public string Chapter { get; set; }
-        public string VerseStart { get; set; }
-        public string VerseEnd { get; set; }
+        public int Chapter { get; set; }
+        public int? VerseStart { get; set; }
+        public int? VerseEnd { get; set; }
         public string Url { get; set; }
         public string Source { get; set; }
 
