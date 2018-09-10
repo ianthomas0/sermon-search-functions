@@ -33,7 +33,7 @@ namespace Blackbaud.Church.PreachingCollective
             var chapter = req.Query["chapter"];
             if (!String.IsNullOrWhiteSpace(chapter))
             {
-                filter = $"Book eq '{book}' and Chapter eq '{chapter}'";
+                filter = $"Book eq '{book}' and Chapter eq {chapter}";
             }
             else
             {
