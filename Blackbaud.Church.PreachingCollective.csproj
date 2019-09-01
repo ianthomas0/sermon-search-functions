@@ -4,9 +4,8 @@
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.22" />
-    <PackageReference Include="Microsoft.Azure.Search" Version="5.0.2" />
-    <PackageReference Include="Automapper" Version="7.0.1" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.26" />
+    <PackageReference Include="Microsoft.Azure.Search" Version="5.0.3" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

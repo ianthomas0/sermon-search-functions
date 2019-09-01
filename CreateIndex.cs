@@ -11,6 +11,7 @@ using Microsoft.Azure.Search.Models;
 using Blackbaud.Church.PreachingCollective.Models;
 using System.Collections.Generic;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace Blackbaud.Church.PreachingCollective
 {
@@ -19,7 +20,7 @@ namespace Blackbaud.Church.PreachingCollective
         private static string indexName = Indexes.SermonIndex;
 
         [FunctionName("CreateIndex")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, TraceWriter log)
+        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, ILogger log)
         {
             var searchAccessKey = System.Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
             var searchService = System.Environment.GetEnvironmentVariable("SearchService", EnvironmentVariableTarget.Process);
