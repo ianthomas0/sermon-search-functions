@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 
-namespace preaching_collective_functions.Models
+namespace PreachingCollective.Models
 {
     public class SermonResponse
     {
@@ -12,6 +13,8 @@ namespace preaching_collective_functions.Models
         public int Chapter { get; set; }
         public int? VerseStart { get; set; }
         public int? VerseEnd { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>")]
         public string Url { get; set; }
         public string Source { get; set; }
 

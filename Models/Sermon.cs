@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Azure.Search;
 
 namespace Blackbaud.Church.PreachingCollective.Models
@@ -29,6 +30,8 @@ namespace Blackbaud.Church.PreachingCollective.Models
         [IsFilterable, IsSortable]
         public int? VerseEnd { get; set; }
 
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>")]
         public string Url { get; set; }
 
         [IsSearchable, IsFilterable, IsSortable]

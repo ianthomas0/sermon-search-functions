@@ -1,15 +1,10 @@
 
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json;
 using Microsoft.Azure.Search;
-using Microsoft.Azure.Search.Models;
 using Blackbaud.Church.PreachingCollective.Models;
-using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Logging;
 
@@ -20,6 +15,7 @@ namespace Blackbaud.Church.PreachingCollective
         private static string indexName = Indexes.SermonIndex;
 
         [FunctionName("CreateIndex")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:Remove unused parameter", Justification = "Meeting interface")]
         public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, ILogger log)
         {
             var searchAccessKey = System.Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
@@ -27,11 +23,11 @@ namespace Blackbaud.Church.PreachingCollective
             var searchCredentials = new SearchCredentials(searchAccessKey);
             var serviceClient = new SearchServiceClient(searchService, searchCredentials);
 
-            var indexClient = serviceClient.Indexes.GetClient(indexName);
+            serviceClient.Indexes.GetClient(indexName);
 
             if (!serviceClient.Indexes.Exists(indexName))
             {
-                var definition = new Index()
+                var definition = new Microsoft.Azure.Search.Models.Index()
                 {
                     Name = indexName,
                     Fields = FieldBuilder.BuildForType<Sermon>()
@@ -39,6 +35,9 @@ namespace Blackbaud.Church.PreachingCollective
 
                 serviceClient.Indexes.Create(definition);
             }
+
+            serviceClient.Dispose();
+
             return new OkResult();
         }
     }

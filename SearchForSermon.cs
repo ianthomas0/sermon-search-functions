@@ -1,10 +1,7 @@
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using Blackbaud.Church.PreachingCollective.Models;
@@ -12,52 +9,79 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace Blackbaud.Church.PreachingCollective
 {
     public static class SearchForSermon
     {
         [FunctionName("SearchForSermon")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:Remove unused parameter", Justification = "Meeting interface")]
         public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, ILogger log)
         {
+            if (req is null)
+            {
+                return new BadRequestObjectResult("Request body can not be null");
+            }
+
             var searchAccessKey = System.Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
             var searchService = System.Environment.GetEnvironmentVariable("SearchService", EnvironmentVariableTarget.Process);
             var searchCredentials = new SearchCredentials(searchAccessKey);
             var serviceClient = new SearchServiceClient(searchService, searchCredentials);
 
-            SearchParameters parameters;
-
-            DocumentSearchResult<Sermon> results;
             var pageSize = 1000;
-            string filter = "";
             var book = req.Query["book"];
             var chapter = req.Query["chapter"];
-            if (!String.IsNullOrWhiteSpace(chapter))
+            var source = req.Query["source"];
+
+            var parameters = new SearchParameters()
             {
-                filter = $"Book eq '{book}' and Chapter eq {chapter}";
-            }
-            else
+                Top = pageSize,
+                SearchFields = new List<string> { "Title" },
+                OrderBy = new List<string> { "Book asc", "Chapter asc", "VerseStart asc" }
+            };
+
+            string filter = "";
+
+            // Add chapter and verse filtering, if book filter is present
+            if (!string.IsNullOrEmpty(book))
             {
                 filter = $"Book eq '{book}'";
+
+                if (!string.IsNullOrWhiteSpace(chapter))
+                {
+                    filter = $"{filter} and Chapter eq {chapter}";
+                }
             }
 
-            parameters = new SearchParameters()
+            // Add source filtering
+            if (!string.IsNullOrWhiteSpace(source))
             {
-                Filter = filter,
-                Top = pageSize,
-                OrderBy = new List<string>() { "Chapter asc", "VerseStart asc" }
-            };
+                if (!string.IsNullOrWhiteSpace(filter))
+                {
+                    filter = $"{filter} and ";
+                }
+
+                filter = $"{filter}Source eq '{source}'";
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                parameters.Filter = filter;
+            }
 
             if (!string.IsNullOrEmpty(req.Query["page"]))
             {
-                parameters.Skip = (int.Parse(req.Query["page"]) - 1) * pageSize;
+                parameters.Skip = (int.Parse(req.Query["page"], CultureInfo.InvariantCulture) - 1) * pageSize;
             }
 
             var indexClient = serviceClient.Indexes.GetClient(Indexes.SermonIndex);
 
-            results = indexClient.Documents.Search<Sermon>(req.Query["book"], parameters);
+            var results = indexClient.Documents.Search<Sermon>(req.Query["search"], parameters);
 
             var dedup = results.Results.GroupBy(x => x.Document.Title).Select(x => x.First()).Select(x => x.Document);
+
+            serviceClient.Dispose();
 
             return new OkObjectResult(dedup);
         }
