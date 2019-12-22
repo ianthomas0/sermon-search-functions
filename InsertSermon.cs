@@ -17,10 +17,11 @@ using System.Linq;
 
 namespace Blackbaud.Church.PreachingCollective
 {
+    /// <summary>
+    /// Insert sermons as documents into blob storage to be indexed for azure search
+    /// </summary>
     public static class InsertSermon
     {
-        private static string _indexName = Indexes.SermonIndex;
-
         [FunctionName("InsertSermon")]
         public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, ILogger log)
         {
@@ -29,25 +30,11 @@ namespace Blackbaud.Church.PreachingCollective
                 return new BadRequestObjectResult("Request body can not be null");
             }
 
-            // Get search service credentials
-            var searchAccessKey = System.Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
-            var searchService = System.Environment.GetEnvironmentVariable("SearchService", EnvironmentVariableTarget.Process);
-            var searchCredentials = new SearchCredentials(searchAccessKey);
-
-            // Get search service client and grab the index
-            var serviceClient = new SearchServiceClient(searchService, searchCredentials);
-            var indexClient = serviceClient.Indexes.GetClient(_indexName);
-            serviceClient.Dispose();
-
             var streamReader = new StreamReader(req.Body);
             string requestBody = streamReader.ReadToEnd();
             streamReader.Dispose();
 
             var sermons = JsonConvert.DeserializeObject<IEnumerable<Sermon>>(requestBody);
-            var batch = IndexBatch.Upload(sermons);
-            indexClient.Documents.Index(batch);
-            log.LogInformation($"Uploaded {sermons.Count()} sermons from {sermons.First().Source}");
-
 
             // Store the sermons as documents in blob storage
             var storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=pcsermonfiles;AccountKey=pOz/+tEOuxqpGMEnmvKEhDZ/HlX+Kp85fTpNmHvIJj2zgVu3p9wXUt5FoRAojc2dimNL3TaoSGB/3WX9qHL8Rg==;EndpointSuffix=core.windows.net";
@@ -73,6 +60,8 @@ namespace Blackbaud.Church.PreachingCollective
                     cloudBlockBlob.UploadTextAsync(JsonConvert.SerializeObject(sermon, Formatting.Indented));
                 }
             }
+
+            log.LogInformation($"Uploaded {sermons.Count()} sermons from {sermons.First().Source}");
 
             return new OkResult();
         }

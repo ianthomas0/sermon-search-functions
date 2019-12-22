@@ -24,8 +24,8 @@ namespace Blackbaud.Church.PreachingCollective
                 return new BadRequestObjectResult("Request body can not be null");
             }
 
-            var searchAccessKey = System.Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
-            var searchService = System.Environment.GetEnvironmentVariable("SearchService", EnvironmentVariableTarget.Process);
+            var searchAccessKey = Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
+            var searchService = Environment.GetEnvironmentVariable("SearchService", EnvironmentVariableTarget.Process);
             var searchCredentials = new SearchCredentials(searchAccessKey);
             var serviceClient = new SearchServiceClient(searchService, searchCredentials);
 
@@ -78,7 +78,6 @@ namespace Blackbaud.Church.PreachingCollective
             var indexClient = serviceClient.Indexes.GetClient(Indexes.SermonIndex);
 
             var results = indexClient.Documents.Search<Sermon>(req.Query["search"], parameters);
-
             var dedup = results.Results.GroupBy(x => x.Document.Title).Select(x => x.First()).Select(x => x.Document);
 
             serviceClient.Dispose();
