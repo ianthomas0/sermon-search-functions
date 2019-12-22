@@ -38,7 +38,7 @@ namespace Blackbaud.Church.PreachingCollective
             {
                 Top = pageSize,
                 SearchFields = new List<string> { "Title" },
-                OrderBy = new List<string> { "Book asc", "Chapter asc", "VerseStart asc" }
+                OrderBy = new List<string> { "content/Book asc", "content/Chapter asc", "content/VerseStart asc" }
             };
 
             string filter = "";
@@ -46,11 +46,11 @@ namespace Blackbaud.Church.PreachingCollective
             // Add chapter and verse filtering, if book filter is present
             if (!string.IsNullOrEmpty(book))
             {
-                filter = $"Book eq '{book}'";
+                filter = $"content/Book eq '{book}'";
 
                 if (!string.IsNullOrWhiteSpace(chapter))
                 {
-                    filter = $"{filter} and Chapter eq {chapter}";
+                    filter = $"{filter} and content/Chapter eq {chapter}";
                 }
             }
 
@@ -62,7 +62,7 @@ namespace Blackbaud.Church.PreachingCollective
                     filter = $"{filter} and ";
                 }
 
-                filter = $"{filter}Source eq '{source}'";
+                filter = $"{filter}content/Source eq '{source}'";
             }
 
             if (!string.IsNullOrWhiteSpace(filter))
@@ -77,8 +77,8 @@ namespace Blackbaud.Church.PreachingCollective
 
             var indexClient = serviceClient.Indexes.GetClient(Indexes.SermonIndex);
 
-            var results = indexClient.Documents.Search<Sermon>(req.Query["search"], parameters);
-            var dedup = results.Results.GroupBy(x => x.Document.Title).Select(x => x.First()).Select(x => x.Document);
+            var results = indexClient.Documents.Search<SermonDocument>(req.Query["search"], parameters);
+            var dedup = results.Results.GroupBy(x => x.Document.content.Title).Select(x => x.First().Document.content);
 
             serviceClient.Dispose();
 
