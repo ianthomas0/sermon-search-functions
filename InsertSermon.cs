@@ -5,15 +5,14 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Microsoft.Azure.Search;
-using Microsoft.Azure.Search.Models;
 using Blackbaud.Church.PreachingCollective.Models;
 using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System.Linq;
+using Microsoft.Azure.Cosmos;
+using System.Threading.Tasks;
+using PreachingCollective.BusinessLogic;
 
 namespace Blackbaud.Church.PreachingCollective
 {
@@ -23,7 +22,7 @@ namespace Blackbaud.Church.PreachingCollective
     public static class InsertSermon
     {
         [FunctionName("InsertSermon")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, ILogger log)
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, ILogger log)
         {
             if (req is null)
             {
@@ -34,31 +33,13 @@ namespace Blackbaud.Church.PreachingCollective
             string requestBody = streamReader.ReadToEnd();
             streamReader.Dispose();
 
-            var sermons = JsonConvert.DeserializeObject<IEnumerable<Sermon>>(requestBody);
+            var sermons = JsonConvert.DeserializeObject<IEnumerable<SermonInsert>>(requestBody);
 
-            // Store the sermons as documents in blob storage
-            var storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=pcsermonfiles;AccountKey=pOz/+tEOuxqpGMEnmvKEhDZ/HlX+Kp85fTpNmHvIJj2zgVu3p9wXUt5FoRAojc2dimNL3TaoSGB/3WX9qHL8Rg==;EndpointSuffix=core.windows.net";
-            CloudStorageAccount storageAccount;
-            var parsed = CloudStorageAccount.TryParse(storageConnectionString, out storageAccount);
+            var sermonsService = new SermonsService();
 
-            if (parsed)
+            foreach (var sermon in sermons)
             {
-                // Create the CloudBlobClient that represents the 
-                // Blob storage endpoint for the storage account.
-                CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
-
-                // Create a container called 'quickstartblobs' and 
-                // append a GUID value to it to make the name unique.
-                CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("sermons");
-                cloudBlobContainer.CreateIfNotExistsAsync();
-
-                foreach (var sermon in sermons)
-                {
-                    // Get a reference to the blob address, then upload the file to the blob.
-                    // Use the value of localFileName for the blob name.
-                    CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference($"{sermon.Id}.json");
-                    cloudBlockBlob.UploadTextAsync(JsonConvert.SerializeObject(sermon, Formatting.Indented));
-                }
+                await sermonsService.UpsertSermon(sermon);
             }
 
             log.LogInformation($"Uploaded {sermons.Count()} sermons from {sermons.First().Source}");
