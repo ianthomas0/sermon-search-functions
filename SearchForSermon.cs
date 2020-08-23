@@ -32,6 +32,8 @@ namespace Blackbaud.Church.PreachingCollective
             var pageSize = 1000;
             var book = req.Query["book"];
             var chapter = req.Query["chapter"];
+            var chapterEnd = req.Query["chapterEnd"];
+            var verseStart = req.Query["verseStart"];
             var source = req.Query["source"];
 
             var parameters = new SearchParameters()
@@ -44,14 +46,35 @@ namespace Blackbaud.Church.PreachingCollective
             string filter = "";
 
             // Add chapter and verse filtering, if book filter is present
+            // Must account for whole chapter references
             if (!string.IsNullOrEmpty(book))
             {
                 filter = $"Book eq '{book}'";
 
+                // Filter by chapter, finding chapter references WITHIN range
+                // start chapter of REFERENCE <= start chapter of SEARCH
+                // end chapter of REFERENCE >= end chapter of SEARCH
                 if (!string.IsNullOrWhiteSpace(chapter))
                 {
-                    filter = $"{filter} and Chapter eq {chapter}";
+                    if (string.IsNullOrWhiteSpace(chapterEnd))
+                    {
+                        filter = $"{filter} and Chapter le {chapter} and ChapterEnd ge {chapter}";
+                    }
+                    else
+                    {
+                        filter = $"{filter} and ChapterEnd ge {chapter} and Chapter le {chapterEnd}";
+                    }
+
                 }
+
+                // Filter by chapter, finding chapter references WITHIN range
+                // start chapter of REFERENCE <= start chapter of SEARCH
+                // end chapter of REFERENCE >= end chapter of SEARCH
+                if (!string.IsNullOrWhiteSpace(verseStart))
+                {
+                    filter = $"{filter} and VerseStart ge {verseStart}";
+                }
+
             }
 
             // Add source filtering
