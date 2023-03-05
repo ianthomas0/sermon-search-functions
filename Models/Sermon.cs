@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using Microsoft.Azure.Search;
+using Azure.Search.Documents.Indexes;
 
 namespace Blackbaud.Church.PreachingCollective.Models
 {
@@ -9,37 +8,37 @@ namespace Blackbaud.Church.PreachingCollective.Models
         [System.ComponentModel.DataAnnotations.Key]
         public string Id { get; set; }
 
-        [IsSearchable, IsFilterable, IsSortable]
+        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Title { get; set; }
 
-        [IsSearchable, IsFilterable, IsSortable]
+        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Author { get; set; }
 
-        [IsSearchable, IsFilterable, IsSortable]
+        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Book { get; set; }
 
-        [IsSearchable, IsFilterable, IsSortable]
+        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Text { get; set; }
 
-        [IsFilterable, IsSortable]
+        [SimpleField(IsFilterable = true, IsSortable = true)]
         public int? Chapter { get; set; }
 
-        [IsFilterable, IsSortable]
+        [SimpleField(IsFilterable = true, IsSortable = true)]
         public int? VerseStart { get; set; }
 
-        [IsFilterable, IsSortable]
+        [SimpleField(IsFilterable = true, IsSortable = true)]
         public int? VerseEnd { get; set; }
 
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>")]
         public string Url { get; set; }
 
-        [IsSearchable, IsFilterable, IsSortable]
+        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Source { get; set; }
 
         public string Scripture { get; set; }
 
-        [IsFilterable, IsSortable]
+        [SimpleField(IsFilterable = true, IsSortable = true)]
         public DateTimeOffset Date { get; set; }
     }
 }
