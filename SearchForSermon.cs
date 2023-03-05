@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Search;
-using Microsoft.Azure.Search.Models;
+using Azure.Search.Documents;
 using Blackbaud.Church.PreachingCollective.Models;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+using Azure;
+using Azure.Search.Documents.Indexes;
 
 namespace Blackbaud.Church.PreachingCollective
 {
@@ -26,8 +26,8 @@ namespace Blackbaud.Church.PreachingCollective
 
             var searchAccessKey = Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
             var searchService = Environment.GetEnvironmentVariable("SearchService", EnvironmentVariableTarget.Process);
-            var searchCredentials = new SearchCredentials(searchAccessKey);
-            var serviceClient = new SearchServiceClient(searchService, searchCredentials);
+            var searchCredentials = new AzureKeyCredential(searchAccessKey);
+            var serviceClient = new SearchIndexClient(new Uri(searchService), searchCredentials);
 
             var pageSize = 1000;
             var book = req.Query["book"];
@@ -36,12 +36,15 @@ namespace Blackbaud.Church.PreachingCollective
             var verseStart = req.Query["verseStart"];
             var source = req.Query["source"];
 
-            var parameters = new SearchParameters()
+            var parameters = new SearchOptions()
             {
-                Top = pageSize,
-                SearchFields = new List<string> { "Title" },
-                OrderBy = new List<string> { "Book asc", "Chapter asc", "VerseStart asc" }
+                Size = pageSize
             };
+
+            parameters.SearchFields.Add("Title");
+            parameters.OrderBy.Add("Book asc");
+            parameters.OrderBy.Add("Chapter asc");
+            parameters.OrderBy.Add("VerseStart asc");
 
             string filter = "";
 
@@ -98,12 +101,11 @@ namespace Blackbaud.Church.PreachingCollective
                 parameters.Skip = (int.Parse(req.Query["page"], CultureInfo.InvariantCulture) - 1) * pageSize;
             }
 
-            var indexClient = serviceClient.Indexes.GetClient(Indexes.SermonIndex);
+            var indexClient = serviceClient.GetSearchClient(Indexes.SermonIndex);
 
-            var results = indexClient.Documents.Search<Sermon>(req.Query["search"], parameters);
-            var dedup = results.Results.GroupBy(x => x.Document.Title).Select(x => x.First()).Select(x => x.Document);
-
-            serviceClient.Dispose();
+            var search = indexClient.Search<Sermon>(req.Query["search"], parameters);
+            var results = search.Value.GetResults();
+            var dedup =results.GroupBy(x => x.Document.Title).Select(x => x.First()).Select(x => x.Document);
 
             return new OkObjectResult(dedup);
         }

@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Search;
 using Blackbaud.Church.PreachingCollective.Models;
 using System;
 using Microsoft.Extensions.Logging;
+using Azure;
+using Azure.Search.Documents.Indexes;
+using Azure.Search.Documents.Indexes.Models;
 
 namespace Blackbaud.Church.PreachingCollective
 {
@@ -20,23 +22,14 @@ namespace Blackbaud.Church.PreachingCollective
         {
             var searchAccessKey = System.Environment.GetEnvironmentVariable("SearchAccessKey", EnvironmentVariableTarget.Process);
             var searchService = System.Environment.GetEnvironmentVariable("SearchService", EnvironmentVariableTarget.Process);
-            var searchCredentials = new SearchCredentials(searchAccessKey);
-            var serviceClient = new SearchServiceClient(searchService, searchCredentials);
+            var searchCredentials = new AzureKeyCredential(searchAccessKey);
+            var serviceClient = new SearchIndexClient(new Uri(searchService), searchCredentials);
 
-            serviceClient.Indexes.GetClient(indexName);
-
-            if (!serviceClient.Indexes.Exists(indexName))
+            var fields = new FieldBuilder().Build(typeof(Sermon));
+            serviceClient.CreateOrUpdateIndex(new SearchIndex(indexName)
             {
-                var definition = new Microsoft.Azure.Search.Models.Index()
-                {
-                    Name = indexName,
-                    Fields = FieldBuilder.BuildForType<Sermon>()
-                };
-
-                serviceClient.Indexes.Create(definition);
-            }
-
-            serviceClient.Dispose();
+                Fields = fields
+            });
 
             return new OkResult();
         }
