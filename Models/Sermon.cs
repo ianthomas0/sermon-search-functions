@@ -28,19 +28,25 @@ namespace Blackbaud.Church.PreachingCollective.Models
         public long? Chapter { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true)]
+        public long? ChapterEnd { get; set; }
+
+        [SimpleField(IsFilterable = true, IsSortable = true)]
         public long? VerseStart { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true)]
         public long? VerseEnd { get; set; }
 
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>")]
+        [SimpleField]
         public string Url { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
         public string Source { get; set; }
 
+        [SimpleField]
         public string Scripture { get; set; }
+
+        [SimpleField]
+        public string FormattedScripture { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true)]
         public DateTimeOffset Date { get; set; }
