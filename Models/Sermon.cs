@@ -1,5 +1,6 @@
 using System;
 using Azure.Search.Documents.Indexes;
+using Azure.Search.Documents.Indexes.Models;
 
 namespace Blackbaud.Church.PreachingCollective.Models
 {
@@ -8,7 +9,7 @@ namespace Blackbaud.Church.PreachingCollective.Models
         [System.ComponentModel.DataAnnotations.Key]
         public string Id { get; set; }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
+        [SearchableField(IsFilterable = true, IsSortable = true, AnalyzerName = LexicalAnalyzerName.Values.StandardLucene)]
         public string Title { get; set; }
 
         [SearchableField(IsFilterable = true, IsSortable = true)]
