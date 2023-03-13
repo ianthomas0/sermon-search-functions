@@ -12,10 +12,10 @@ namespace Blackbaud.Church.PreachingCollective.Models
         [SearchableField(IsFilterable = true, IsSortable = true, AnalyzerName = LexicalAnalyzerName.Values.StandardLucene)]
         public string Title { get; set; }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
+        [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
         public string Author { get; set; }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
+        [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
         public string Book { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true)]
@@ -37,7 +37,7 @@ namespace Blackbaud.Church.PreachingCollective.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>")]
         public string Url { get; set; }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
+        [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
         public string Source { get; set; }
 
         public string Scripture { get; set; }
