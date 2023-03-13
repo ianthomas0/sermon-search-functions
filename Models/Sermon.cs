@@ -42,7 +42,7 @@ namespace Blackbaud.Church.PreachingCollective.Models
         [SimpleField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
         public string Source { get; set; }
 
-        [SimpleField]
+        [SimpleField(IsFilterable = true, IsSortable = true)]
         public string Scripture { get; set; }
 
         [SimpleField]
