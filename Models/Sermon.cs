@@ -7,12 +7,11 @@ namespace Blackbaud.Church.PreachingCollective.Models
 {
     public class Sermon
     {
-        [SimpleField]
+        [SimpleField(IsKey = true)]
         [JsonProperty("rid")]
         public string ResourceId { get; set; }
         
-        [System.ComponentModel.DataAnnotations.Key]
-        [SimpleField()]
+        [SimpleField]
         [JsonProperty("id")]
         public string Id { get; set; }
 
