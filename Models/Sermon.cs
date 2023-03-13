@@ -25,13 +25,13 @@ namespace Blackbaud.Church.PreachingCollective.Models
         public string Text { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true)]
-        public int? Chapter { get; set; }
+        public long? Chapter { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true)]
-        public int? VerseStart { get; set; }
+        public long? VerseStart { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true)]
-        public int? VerseEnd { get; set; }
+        public long? VerseEnd { get; set; }
 
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>")]
