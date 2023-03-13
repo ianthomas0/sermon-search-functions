@@ -18,6 +18,9 @@ namespace Blackbaud.Church.PreachingCollective.Models
         public string Book { get; set; }
 
         [SearchableField(IsFilterable = true, IsSortable = true)]
+        public int BookOrder { get; set; }
+
+        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Text { get; set; }
 
         [SimpleField(IsFilterable = true, IsSortable = true)]
