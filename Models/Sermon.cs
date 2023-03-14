@@ -1,18 +1,11 @@
 using System;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
-using Newtonsoft.Json;
 
 namespace Blackbaud.Church.PreachingCollective.Models
 {
     public class Sermon
-    {
-        [SimpleField(IsKey = true)]
-        [JsonProperty("rid")]
-        public string ResourceId { get; set; }
-        
-        [SimpleField]
-        [JsonProperty("id")]
+    {     
         public string Id { get; set; }
 
         [SearchableField(IsFilterable = true, IsSortable = true, AnalyzerName = LexicalAnalyzerName.Values.StandardLucene)]

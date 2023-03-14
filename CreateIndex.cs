@@ -25,7 +25,15 @@ namespace Blackbaud.Church.PreachingCollective
             var searchCredentials = new AzureKeyCredential(searchAccessKey);
             var serviceClient = new SearchIndexClient(new Uri(searchService), searchCredentials);
 
+            var idField = new SearchField("id", SearchFieldDataType.String);
+            var ridField = new SearchField("rid", SearchFieldDataType.String) {
+                IsKey = true
+            };
+
             var fields = new FieldBuilder().Build(typeof(Sermon));
+            fields.Add(idField);
+            fields.Add(ridField);
+
             serviceClient.CreateOrUpdateIndex(new SearchIndex(indexName)
             {
                 Fields = fields
