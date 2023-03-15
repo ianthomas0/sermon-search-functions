@@ -34,7 +34,7 @@ namespace PreachingCollective.BusinessLogic
         public async Task<IEnumerable<string>> GetTopSources()
         {
             var container = await GetContainer();
-            var sqlQueryText = "SELECT TOP 20 VALUE COUNT(1) AS Count, c.Source FROM c GROUP BY c.Source ORDER BY Count DESC";
+            var sqlQueryText = "SELECT DISTINCT(c.Source) FROM c";
 
             QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
             FeedIterator<string> queryResultSetIterator = container.GetItemQueryIterator<string>(queryDefinition);
