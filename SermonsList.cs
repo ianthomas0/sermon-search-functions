@@ -36,6 +36,7 @@ namespace Blackbaud.Church.PreachingCollective
             var chapterEnd = req.Query["chapterEnd"];
             var verseStart = req.Query["verseStart"];
             var source = req.Query["source"];
+            var author = req.Query["author"];
 
             var parameters = new SearchOptions()
             {
@@ -94,6 +95,17 @@ namespace Blackbaud.Church.PreachingCollective
                 }
 
                 filter = $"{filter}Source eq '{source}'";
+            }
+
+            // Add author filtering
+            if (!string.IsNullOrWhiteSpace(author))
+            {
+                if (!string.IsNullOrWhiteSpace(filter))
+                {
+                    filter = $"{filter} and ";
+                }
+
+                filter = $"{filter}Author eq '{author}'";
             }
 
             if (!string.IsNullOrWhiteSpace(filter))
