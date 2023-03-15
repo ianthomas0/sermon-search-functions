@@ -31,6 +31,25 @@ namespace PreachingCollective.BusinessLogic
             return authors;
         }
 
+        public async Task<IEnumerable<string>> GetTopSources()
+        {
+            var container = await GetContainer();
+            var sqlQueryText = "SELECT TOP 20 VALUE COUNT(1) AS Count, c.Source FROM c GROUP BY c.Source ORDER BY Count DESC";
+
+            QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
+            FeedIterator<string> queryResultSetIterator = container.GetItemQueryIterator<string>(queryDefinition);
+
+            List<string> sources = new List<string>();
+
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<string> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                sources.AddRange(currentResultSet);
+            }
+
+            return sources;
+        }
+
         public async Task UpsertSermon(SermonInsert sermon)
         {
             var container = await GetContainer();
