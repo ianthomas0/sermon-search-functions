@@ -1,8 +1,9 @@
-﻿using Blackbaud.Church.PreachingCollective.Models;
+﻿using PreachingCollective.Models;
 using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace PreachingCollective.BusinessLogic
 {
@@ -15,26 +16,28 @@ namespace PreachingCollective.BusinessLogic
         public async Task<IEnumerable<string>> GetAuthors()
         {
             var container = await GetContainer();
-            var sqlQueryText = "SELECT DISTINCT(c.Author) FROM c";
+            var sqlQueryText = "SELECT COUNT(c.Author) as Count, c.Author FROM c GROUP BY c.Author";
 
             QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
-            FeedIterator<string> queryResultSetIterator = container.GetItemQueryIterator<string>(queryDefinition);
+            FeedIterator<AuthorsQueryResult> queryResultSetIterator = container.GetItemQueryIterator<AuthorsQueryResult>(queryDefinition);
 
-            List<string> authors = new List<string>();
+            List<AuthorsQueryResult> authors = new List<AuthorsQueryResult>();
 
             while (queryResultSetIterator.HasMoreResults)
             {
-                FeedResponse<string> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                FeedResponse<AuthorsQueryResult> currentResultSet = await queryResultSetIterator.ReadNextAsync();
                 authors.AddRange(currentResultSet);
             }
 
-            return authors;
+            var sortedAuthors = authors.OrderByDescending(a => a.Count).ToList();
+
+            return sortedAuthors.Take(20).OrderBy(a => a.Author).Select(a => a.Author);
         }
 
         public async Task<IEnumerable<string>> GetTopSources()
         {
             var container = await GetContainer();
-            var sqlQueryText = "SELECT DISTINCT(c.Source) FROM c";
+            var sqlQueryText = "SELECT DISTINCT VALUE c.Source FROM c";
 
             QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
             FeedIterator<string> queryResultSetIterator = container.GetItemQueryIterator<string>(queryDefinition);

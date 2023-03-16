@@ -1,4 +1,4 @@
-namespace Blackbaud.Church.PreachingCollective
+namespace PreachingCollective
 {
     public static class Indexes
     {

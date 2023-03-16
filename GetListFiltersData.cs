@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using PreachingCollective.BusinessLogic;
 using System.Threading.Tasks;
+using PreachingCollective.Models;
 
 namespace Blackbaud.Church.PreachingCollective
 {
-    public static class ListFiltersData
+    public static class GetListFiltersData
     {
         [FunctionName("ListFiltersData")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:Remove unused parameter", Justification = "Meeting interface")]
@@ -19,10 +20,10 @@ namespace Blackbaud.Church.PreachingCollective
             var authors = await sermonsService.GetAuthors();
             var sources = await sermonsService.GetTopSources();
 
-            var response = new
+            var response = new ListFilterData
             {
-                sources = authors,
-                authors = sources
+                Authors = authors,
+                Sources = sources
             };
             
             return new OkObjectResult(response);
