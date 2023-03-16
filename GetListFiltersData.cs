@@ -7,7 +7,7 @@ using PreachingCollective.BusinessLogic;
 using System.Threading.Tasks;
 using PreachingCollective.Models;
 
-namespace Blackbaud.Church.PreachingCollective
+namespace PreachingCollective
 {
     public static class GetListFiltersData
     {
