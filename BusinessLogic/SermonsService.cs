@@ -19,7 +19,12 @@ namespace PreachingCollective.BusinessLogic
             var sqlQueryText = "SELECT COUNT(c.Author) as Count, c.Author FROM c GROUP BY c.Author";
 
             QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
-            FeedIterator<AuthorsQueryResult> queryResultSetIterator = container.GetItemQueryIterator<AuthorsQueryResult>(queryDefinition);
+            var queryRequestOptions = new QueryRequestOptions
+            {
+                MaxItemCount = 500
+            };
+
+            FeedIterator<AuthorsQueryResult> queryResultSetIterator = container.GetItemQueryIterator<AuthorsQueryResult>(queryDefinition, requestOptions: queryRequestOptions);
 
             List<AuthorsQueryResult> authors = new List<AuthorsQueryResult>();
 
