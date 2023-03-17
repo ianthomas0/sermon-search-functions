@@ -5,7 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Blackbaud.Church.PreachingCollective.Models;
+using PreachingCollective.Models;
 using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ using Microsoft.Azure.Cosmos;
 using System.Threading.Tasks;
 using PreachingCollective.BusinessLogic;
 
-namespace Blackbaud.Church.PreachingCollective
+namespace PreachingCollective
 {
     /// <summary>
     /// Insert sermons as documents into blob storage to be indexed for azure search

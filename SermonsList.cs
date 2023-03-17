@@ -3,7 +3,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Azure.Search.Documents;
-using Blackbaud.Church.PreachingCollective.Models;
+using PreachingCollective.Models;
 using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ using Azure;
 using Azure.Search.Documents.Indexes;
 using Microsoft.Extensions.Options;
 
-namespace Blackbaud.Church.PreachingCollective
+namespace PreachingCollective
 {
     public static class SermonsList
     {

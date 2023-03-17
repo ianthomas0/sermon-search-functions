@@ -1,7 +1,7 @@
 using System;
 using Azure.Search.Documents.Indexes;
 
-namespace Blackbaud.Church.PreachingCollective.Models
+namespace PreachingCollective.Models
 {
     public class SermonInsert
     {
