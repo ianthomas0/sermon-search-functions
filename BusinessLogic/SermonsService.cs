@@ -65,6 +65,13 @@ namespace PreachingCollective.BusinessLogic
             await container.UpsertItemAsync(sermon);
         }
 
+        public async Task DeleteDocument(string id)
+        {
+            var container = await GetContainer();
+
+            await container.DeleteItemAsync<Sermon>(id, new PartitionKey(id));
+        }
+
         private async Task<Container> GetContainer()
         {
             if (_container == null)
