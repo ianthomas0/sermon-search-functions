@@ -32,7 +32,6 @@ namespace PreachingCollective
 
             // Define parameters from query string
             var pageSize = 1000;
-            var book = req.Query["book"];
             var chapter = req.Query["chapter"];
             var chapterEnd = req.Query["chapterEnd"];
             var verseStart = req.Query["verseStart"];
@@ -52,14 +51,14 @@ namespace PreachingCollective
 
             string filter = "";
 
-            if(string.IsNullOrEmpty(book))
+            if(string.IsNullOrEmpty(bookOrder))
             {
                 filter = $"BookOrder ne null";
             }
 
             // Add chapter and verse filtering, if book filter is present
             // Must account for whole chapter references
-            if (!string.IsNullOrEmpty(book))
+            if (!string.IsNullOrEmpty(bookOrder))
             {
                 filter = $"BookOrder eq {bookOrder}";
 
