@@ -2,7 +2,7 @@
   "profiles": {
     "PreachingCollective": {
       "commandName": "Project",
-      "commandLineArgs": "host start --port 7073 --pause-on-error"
+      "commandLineArgs": "host start --port 7073 --pause-on-error --cors *"
     }
   }
 }

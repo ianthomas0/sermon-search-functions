@@ -30,13 +30,14 @@ namespace PreachingCollective
             var searchCredentials = new AzureKeyCredential(searchAccessKey);
             var serviceClient = new SearchIndexClient(new Uri(searchService), searchCredentials);
 
+            // Define parameters from query string
             var pageSize = 1000;
-            var book = req.Query["book"];
             var chapter = req.Query["chapter"];
             var chapterEnd = req.Query["chapterEnd"];
             var verseStart = req.Query["verseStart"];
             var source = req.Query["source"];
             var author = req.Query["author"];
+            var bookOrder = req.Query["bookNum"];
 
             var parameters = new SearchOptions()
             {
@@ -50,16 +51,16 @@ namespace PreachingCollective
 
             string filter = "";
 
-            if(string.IsNullOrEmpty(book))
+            if(string.IsNullOrEmpty(bookOrder))
             {
                 filter = $"BookOrder ne null";
             }
 
             // Add chapter and verse filtering, if book filter is present
             // Must account for whole chapter references
-            if (!string.IsNullOrEmpty(book))
+            if (!string.IsNullOrEmpty(bookOrder))
             {
-                filter = $"Book eq '{book}'";
+                filter = $"BookOrder eq {bookOrder}";
 
                 // Filter by chapter, finding chapter references WITHIN range
                 // start chapter of REFERENCE <= start chapter of SEARCH
@@ -83,7 +84,6 @@ namespace PreachingCollective
                 {
                     filter = $"{filter} and VerseStart ge {verseStart}";
                 }
-
             }
 
             // Add source filtering
