@@ -27,16 +27,12 @@ namespace PreachingCollective.Models
 
         public int? VerseEnd { get; set; }
 
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>")]
         public string Url { get; set; }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Source { get; set; }
 
         public string Scripture { get; set; }
 
-        [SimpleField(IsFilterable = true, IsSortable = true)]
         public DateTimeOffset Date { get; set; }
     }
 }
