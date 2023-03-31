@@ -5,30 +5,24 @@ namespace PreachingCollective.Models
 {
     public class SermonInsert
     {
-        [System.ComponentModel.DataAnnotations.Key]
         public string Id { get; set; }
 
         public string id { get { return Id; } }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Title { get; set; }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Author { get; set; }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
         public string Book { get; set; }
 
-        [SearchableField(IsFilterable = true, IsSortable = true)]
+        public string BookOrder { get; set; }
+
         public string Text { get; set; }
 
-        [SimpleField(IsFilterable = true, IsSortable = true)]
         public int? Chapter { get; set; }
 
-        [SimpleField(IsFilterable = true, IsSortable = true)]
         public int? VerseStart { get; set; }
 
-        [SimpleField(IsFilterable = true, IsSortable = true)]
         public int? VerseEnd { get; set; }
 
 
