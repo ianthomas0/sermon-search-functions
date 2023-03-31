@@ -21,6 +21,8 @@ namespace PreachingCollective.Models
 
         public int? Chapter { get; set; }
 
+        public int? ChapterEnd { get; set; }
+
         public int? VerseStart { get; set; }
 
         public int? VerseEnd { get; set; }
