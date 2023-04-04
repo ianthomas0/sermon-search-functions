@@ -15,7 +15,7 @@ namespace PreachingCollective.Models
 
         public string Book { get; set; }
 
-        public string BookOrder { get; set; }
+        public int BookOrder { get; set; }
 
         public string Text { get; set; }
 
