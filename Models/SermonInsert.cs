@@ -34,5 +34,7 @@ namespace PreachingCollective.Models
         public string Scripture { get; set; }
 
         public DateTimeOffset Date { get; set; }
+
+        public int Version { get; set; }
     }
 }
